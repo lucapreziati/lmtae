@@ -1,5 +1,4 @@
 sudo: false
 language: java
-script: 
-    cd it.lucapreziati.lmtae
-    mvn clean install
+before_script: cd it.lucapreziati.lmtae
+script: mvn clean install
