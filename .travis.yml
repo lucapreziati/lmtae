@@ -1,1 +1,4 @@
   language: java
+  install: maven deps
+  jdk:
+  - oraclejdk8
