@@ -1,9 +1,10 @@
 package it.lucapreziati.lmtae.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import javax.swing.text.NumberFormatter;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,9 +19,9 @@ public class InputData implements Serializable {
 	private boolean imported;
 	private boolean exempt;
 	private String description;
-	private BigDecimal price;
+	private double price;
 
-	public InputData(Integer number, boolean imported, boolean exempt, String description, BigDecimal price) {
+	public InputData(Integer number, boolean imported, boolean exempt, String description, double price) {
 		super();
 
 		this.number = number;
@@ -62,11 +63,11 @@ public class InputData implements Serializable {
 		this.description = description;
 	}
 
-	public BigDecimal getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -76,28 +77,58 @@ public class InputData implements Serializable {
 		od.setPrice(this.getPrice());
 		od.setNumber(this.getNumber());
 
-		BigDecimal basePrice = Constant.BIGDECIMAL_0;
+		double basePrice = Constant.perc0;
 		if (this.isImported()) {
 			if (this.isExempt()) {
-				basePrice = this.getPrice().multiply(Constant.BIGDECIMAL_5);
-				basePrice = basePrice.scaleByPowerOfTen(-2);
+				basePrice = this.getPrice() * Constant.perc5;
+				// basePrice = basePrice.scaleByPowerOfTen(-2);
 			} else {
-				basePrice = this.getPrice().multiply(Constant.BIGDECIMAL_15);
-				basePrice = basePrice.scaleByPowerOfTen(-2);
+				basePrice = this.getPrice() * Constant.perc15;
+				// basePrice = basePrice.scaleByPowerOfTen(-2);
+				// basePrice.add(this.getPrice().multiply(Constant.double_5)).scaleByPowerOfTen(-2);
+				// basePrice = basePrice.scaleByPowerOfTen(-2);
 			}
 		} else {
 			if (this.isExempt()) {
-				basePrice = Constant.BIGDECIMAL_0;
+				basePrice = Constant.perc0;
 			} else {
-				basePrice = this.getPrice().multiply(Constant.BIGDECIMAL_10);
-				basePrice = basePrice.scaleByPowerOfTen(-2);
+				basePrice = this.getPrice() * Constant.perc10;
+				// basePrice = basePrice.scaleByPowerOfTen(-2);
 			}
 		}
 		// Rounding
-		basePrice = basePrice.multiply(new BigDecimal(20)).round(new MathContext(3)).divide(new BigDecimal(20));
-
+		// basePrice = Math.round(basePrice * 20.0) / 20.0;
+		// basePrice = basePrice.multiply(new double(20)).round(new MathContext(2,
+		// RoundingMode.UP))
+		// .divide(new double(20));
+		basePrice = rounding(basePrice);
 		od.setTaxes(basePrice);
 		return od;
+	}
+
+	private double rounding(double basePrice) {
+		if (basePrice == 0d) {
+			return basePrice;
+		}
+		System.out.println(basePrice);
+		int value = (int) (basePrice * 1000);
+		// NumberFormat nf = new NumberFormatter("###########0");
+		// String bpValue = nf.format(basePrice);
+		int mod = value % 100;
+		if (mod == 0 || mod == 50) {
+			System.out.println(basePrice + " " + value);
+			return value / 1000D;
+		} else {
+			int diff = 0;
+			if (mod < 50) {
+				diff = 50 - mod;
+			} else {
+				diff = 100 - mod;
+			}
+			double res = (value + diff) / 1000D;
+			System.out.println(basePrice + " " + res);
+			return res;
+		}
 	}
 
 	public String toString() {

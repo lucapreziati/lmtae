@@ -2,7 +2,6 @@ package it.lucapreziati.lmtae;
 
 import static org.junit.Assert.*;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -26,25 +25,25 @@ public class TaxServiceTest {
 
 	@Before
 	public void init() {
-		input1.add(new InputData(1, false, true, "book", new BigDecimal(12.49)));
-		input1.add(new InputData(1, false, false, "music CD", new BigDecimal(14.99)));
-		input1.add(new InputData(1, false, true, "chocolate bar", new BigDecimal(0.85)));
+		input1.add(new InputData(1, false, true, "book", 12.49));
+		input1.add(new InputData(1, false, false, "music CD", 14.99));
+		input1.add(new InputData(1, false, true, "chocolate bar", 0.85));
 
 		// 1 imported box of chocolates at 10.00
 		// 1 imported bottle of perfume at 47.50
 
-		input2.add(new InputData(1, true, true, "imported box fo chocolates", new BigDecimal(10.00)));
-		input2.add(new InputData(1, true, false, "imported bottle of perfume", new BigDecimal(47.50)));
+		input2.add(new InputData(1, true, true, "imported box fo chocolates", 10.00));
+		input2.add(new InputData(1, true, false, "imported bottle of perfume", 47.50));
 
 		// imported bottle of perfume at 27.99
 		// 1 bottle of perfume at 18.99
 		// 1 packet of headache pills at 9.75
 		// 1 box of imported chocolates at 11.25
 		// books, food, and medical products that are exempt.
-		input3.add(new InputData(1, true, false, "imported bottle of perfume", new BigDecimal(27.99)));
-		input3.add(new InputData(1, false, false, "bottle of perfume", new BigDecimal(18.99)));
-		input3.add(new InputData(1, false, true, "packet of headache pills", new BigDecimal(9.75)));
-		input3.add(new InputData(1, true, true, "box of imported chocolates ", new BigDecimal(11.25)));
+		input3.add(new InputData(1, true, false, "imported bottle of perfume", 27.99));
+		input3.add(new InputData(1, false, false, "bottle of perfume", 18.99));
+		input3.add(new InputData(1, false, true, "packet of headache pills", 9.75));
+		input3.add(new InputData(1, true, true, "box of imported chocolates ", 11.25));
 
 	}
 
@@ -78,11 +77,11 @@ public class TaxServiceTest {
 		df.setMinimumFractionDigits(2);
 		df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
-		assertEquals("10.50", df.format(result.getResultList().get(0).getTotalAmout()));
-		assertEquals("54.65", df.format(result.getResultList().get(1).getTotalAmout()));
+		assertEquals(10.50d, result.getResultList().get(0).getTotalAmout(), 0d);
+		assertEquals(54.65d, result.getResultList().get(1).getTotalAmout(), 0d);
 
-		assertEquals("65.15", df.format(result.getTotal()));
-		assertEquals("7.65", df.format(result.getTotalTaxes()));
+		assertEquals(65.15d, result.getTotal(), 0d);
+		assertEquals(7.65d, result.getTotalTaxes(), 0d);
 
 		ts.printResult(result);
 	}
@@ -102,7 +101,7 @@ public class TaxServiceTest {
 		assertEquals("20.89", df.format(result.getResultList().get(1).getTotalAmout()));
 		assertEquals("9.75", df.format(result.getResultList().get(2).getTotalAmout()));
 		assertEquals("11.85", df.format(result.getResultList().get(3).getTotalAmout()));
-		
+
 		assertEquals("74.68", df.format(result.getTotal()));
 		assertEquals("6.70", df.format(result.getTotalTaxes()));
 

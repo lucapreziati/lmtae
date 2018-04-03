@@ -1,6 +1,5 @@
 package it.lucapreziati.lmtae.service;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +12,9 @@ public class TaxService {
 
 	public ResultData madeOperation(List<InputData> inputDataList) {
 		List<OutputData> odList = prepareAmount(inputDataList);
-		BigDecimal totalPreTaxes = totalPreTaxes(odList);
-		BigDecimal totalTaxes = totalTaxes(odList);
-		BigDecimal total = total(totalPreTaxes, totalTaxes);
+		double totalPreTaxes = totalPreTaxes(odList);
+		double totalTaxes = totalTaxes(odList);
+		double total = total(totalPreTaxes, totalTaxes);
 		ResultData rs = new ResultData(odList, totalTaxes, total);
 		return rs;
 	}
@@ -25,24 +24,24 @@ public class TaxService {
 		return result;
 	}
 
-	public BigDecimal totalPreTaxes(List<OutputData> result) {
-		BigDecimal totalAmount = new BigDecimal(0);
+	public double totalPreTaxes(List<OutputData> result) {
+		double totalAmount = 0.0;
 		for (OutputData od : result) {
-			totalAmount = totalAmount.add(od.getTotalPrice());
+			totalAmount += od.getTotalPrice();
 		}
 		return totalAmount;
 	}
 
-	public BigDecimal totalTaxes(List<OutputData> result) {
-		BigDecimal totalTaxes = new BigDecimal(0);
+	public double totalTaxes(List<OutputData> result) {
+		double totalTaxes = 0.0;
 		for (OutputData od : result) {
-			totalTaxes = totalTaxes.add(od.getTotalTaxes());
+			totalTaxes += od.getTotalTaxes();
 		}
 		return totalTaxes;
 	}
 
-	public BigDecimal total(BigDecimal totalAmount, BigDecimal totalTaxes) {
-		return totalAmount.add(totalTaxes);
+	public double total(double totalAmount, double totalTaxes) {
+		return totalAmount + totalTaxes;
 	}
 
 	public void printResult(ResultData rd) {

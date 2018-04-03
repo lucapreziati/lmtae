@@ -1,9 +1,6 @@
 package it.lucapreziati.lmtae.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,8 +14,8 @@ public class OutputData implements Serializable {
 
 	private String description;
 	private Integer number;
-	private BigDecimal price;
-	private BigDecimal taxes = Constant.BIGDECIMAL_0;
+	private double price;
+	private double taxes = Constant.perc0;
 
 	public String getDescription() {
 		return description;
@@ -36,19 +33,19 @@ public class OutputData implements Serializable {
 		this.number = number;
 	}
 
-	public BigDecimal getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
-	public BigDecimal getTaxes() {
+	public double getTaxes() {
 		return taxes;
 	}
 
-	public void setTaxes(BigDecimal taxes) {
+	public void setTaxes(double taxes) {
 		this.taxes = taxes;
 	}
 
@@ -56,16 +53,16 @@ public class OutputData implements Serializable {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
 	}
 
-	public BigDecimal getTotalAmout() {
-		return getTotalPrice().add(getTotalTaxes());
+	public double getTotalAmout() {
+		return getTotalPrice() + getTotalTaxes();
 	}
 
-	public BigDecimal getTotalPrice() {
-		return this.getPrice().multiply(new BigDecimal(this.getNumber()));
+	public double getTotalPrice() {
+		return this.getPrice() * (this.getNumber());
 	}
 
-	public BigDecimal getTotalTaxes() {
-		return this.getTaxes().multiply(new BigDecimal(this.getNumber()));
+	public double getTotalTaxes() {
+		return this.getTaxes() * this.getNumber();
 	}
 
 	public String toPrint() {
