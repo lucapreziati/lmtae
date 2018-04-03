@@ -1,0 +1,4 @@
+sudo: false
+language: java
+before_script: cd it.lucapreziati.lmtae
+script: mvn clean install
